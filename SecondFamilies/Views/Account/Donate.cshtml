@@ -1,0 +1,262 @@
+﻿@model DonateViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using SecondFamilies.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="row" style="padding:10px;">
+    <h3>Donate us</h3>
+    <hr />
+    <p style="font-weight:bold; color:gray;">Thank you for your interest in supporting new arrival families! There are many ways to contribute:</p>
+
+
+    <div class="col-md-12" style="margin-top:20px;">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#dmoney">Donate Money</a></li>
+            <li><a asp-area="" asp-controller="Account" asp-action="DonateGoods" >Donate Goods & Items</a></li>
+            <li><a data-toggle="tab" href="#damazon">Donate via Amazon Wish List</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="dmoney" class="tab-pane fade in active">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                                <p style="margin-top:20px; margin-bottom:20px; color:#5cb85c; font-size:13px;"><i>Your generous donation sustains community support to families of refugees,
+                                    low-income immigrants, and displaced Americans. </i></p>
+                                
+
+                                <div class="form-group">
+                                    <label asp-for="Amount"></label>
+                                    <input style="border:1px solid green;" asp-for="Amount" class="form-control" />
+                                    <span asp-validation-for="Amount" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="FirstName"></label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="LastName"></label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="Address"></label>
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>  
+
+                                <div class="form-group">
+                                    <label asp-for="Allocation"></label>
+                                    <select asp-for="Allocation" class="form-control">
+                                        <option value="generalfund">General Fund</option>
+                                        <option value="summercamp">Summer Camp</option>
+                                        <option value="extracurricularactivities">Extracurricular Activities</option>
+                                    </select>
+                                </div>  
+
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+
+                                }
+                                else
+                                {
+                                    <hr />
+                                    <p style="margin-top:20px; color:rgb(100,100,100); font-size:13px;">
+                                        Please enter Your Email and  Password tp Create and Manage Your Account :
+                                    </p>
+
+                                    <div asp-validation-summary="All" class="text-danger"></div>
+                                    <div class="form-group">
+                                        <label asp-for="Email"></label>
+                                        <input asp-for="Email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Password"></label>
+                                        <input asp-for="Password" class="form-control" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="ConfirmPassword"></label>
+                                        <input asp-for="ConfirmPassword" class="form-control" />
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                }
+
+
+                                <div class="form-group" style="display:none;">
+                                    <label asp-for="DonationType"></label>
+                                    <input asp-for="DonationType" value="donatemoney" class="form-control" hidden />
+                                    <span asp-validation-for="DonationType" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-success">Donate</button>
+                            </form>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4">
+                        <img src="~/images/donatemoney.jpg" alt="donatemoney" style="margin:auto; margin-top:20%" class="img-responsive" />
+                    </div>
+                </div>
+            </div>
+            
+            @*<div id="dgoods" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                            <p style="margin-top:20px; margin-bottom:20px; color:#5cb85c; font-size:13px;">
+                                <i>
+                                    Your generous donation sustains community support to families of refugees,
+                                    low-income immigrants, and displaced Americans.
+                                </i>
+                            </p>
+
+
+                            <div class="form-group">
+                                <label asp-for="Item"></label>
+                                <input style="border:1px solid green;" asp-for="Item" class="form-control" />
+                                <span asp-validation-for="Item" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Quantity"></label>
+                                <input asp-for="Quantity" class="form-control" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ImageFile"></label>
+                                <input asp-for="ImageFile" type="file" name="ItemImage" class="form-control" />
+                                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="NeedPickup"></label>
+                                <select asp-for="NeedPickup" class="form-control">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="CanDropOff"></label>
+                                <select asp-for="CanDropOff" class="form-control">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="DatePickDrop"></label>
+                                <input asp-for="DatePickDrop" class="form-control" />
+                                <span asp-validation-for="DatePickDrop" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="FirstName"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="LastName"></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="PhoneNumber"></label>
+                                <input asp-for="PhoneNumber" class="form-control" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Address"></label>
+                                <input asp-for="Address" class="form-control" />
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+
+                            <hr />
+                            <p style="margin-top:20px; color:rgb(100,100,100); font-size:13px;">
+                                Please enter Your Email and  Password tp Create and Manage Your Account :
+                            </p>
+
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Email"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Password"></label>
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ConfirmPassword"></label>
+                                <input asp-for="ConfirmPassword" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group" style="display:none;">
+                                <label asp-for="DonationType"></label>
+                                <input asp-for="DonationType" value="donategoods" class="form-control" hidden />
+                                <span asp-validation-for="DonationType" class="text-danger"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Donate</button>
+                        </form>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4">
+                        <img src="~/images/Slide10.jpg" alt="donategoods" style="margin:auto; margin-top:20%" class="img-responsive" />
+                    </div>
+                </div>
+            </div>*@
+           
+            <div id="damazon" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p style="margin-top:20px; margin-bottom:20px; color:#5cb85c; font-size:13px;">
+                            <i>
+                                Your generous donation sustains community support to families of refugees,
+                                low-income immigrants, and displaced Americans.
+                            </i>
+                        </p>
+
+                        <hr/>
+
+                        <p>
+                            Every family in our program has an 
+                            Amazon Wish list – a list of household items that the family needs to get 
+                            back on their feet.
+                            Check out our Amazon lists HERE: <a href="https://www.amazon.com/gp/registry/wishlist/1C7TMCZMRNLA/ref=nav_wishlist_lists_5">Amazon List</a>.
+                        </p>
+                    </div>
+
+                    <div class="col-md-8">
+                        <a href="https://www.amazon.com/gp/registry/wishlist/1C7TMCZMRNLA/ref=nav_wishlist_lists_5" target="_blank">
+                            <img src="~/images/amazonwish.png" alt="amazonwishlist" style="margin:auto; margin-top:10%" class="img-responsive" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+
+</div>
+

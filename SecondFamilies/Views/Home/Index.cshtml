@@ -1,0 +1,153 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="row">
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <img src="~/images/homepage.jpg" alt="ASP.NET" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Second Families: Connecting communities and easing refugee transition
+                    <br/>
+                    <a class="btn btn-default" style="width:100px; border-radius:15px; font-weight:bold;"
+                       asp-area="" asp-controller="Account" asp-action="Donate" >
+                        Support
+                    </a>
+                </p>
+            </div>
+        </div>
+        @*<div class="item">
+            <img src="~/images/homepage.jpg" alt="Visual Studio" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Second Families: Connecting communities and easing refugee transition
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
+                        Support
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/homepage.jpg" alt="Package Management" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Second Families: Connecting communities and easing refugee transition
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409">
+                        Support
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/homepage.jpg" alt="Microsoft Azure" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Second Families: Connecting communities and easing refugee transition
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>*@
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+</div>
+
+<div class="row">
+    <p style="font-weight:bold; text-align:center; margin-top:30px; font-size:20px;">
+        Helping Families <span style="color:red;">Together</span>
+    </p>
+    <p style="font-weight:bold; text-align:center; margin-top:10px; font-size:14px;">Welcome to Second Families. We serve the refugee community in Southern California. We are here to help.</p>
+</div>
+<hr/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <img src="~/images/slide10.jpg" alt="whatwedo" style="width:60%; margin:auto;" class="img-responsive" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <p style="font-weight:bold; padding-top:20px; color:gray;"><u>What We Do</u></p>
+            <p style="text-align:justify;">
+                Second Families is an all-volunteer organization, providing non-food items
+                (furniture, clothing, school supplies, household goods) to new arrival families in Southern
+                California and beyond. We also provide scholarship for enrichment programs for our families’ kids:
+                sports programs, extracurricular activities, and summer camp.
+            </p>
+            
+                <button class="btn btn-warning" style="margin-top:10px;">
+                    <a style="color:white;" asp-area="" asp-controller="Account" asp-action="Donate">
+                        Support Us
+                    </a>
+                </button>
+           
+        </div>
+    </div>
+    
+    <div class="row" style="margin-top:40px;">
+        <div class="col-md-4">
+                <p style="color:gray;">AMAZON WISH LISTS</p>
+            <hr/>
+                <p style="text-align:justify; font-size:13px;">
+                    Every family in our program has an Amazon Wish list – a list of household items 
+                    that the family needs to get back on their feet. We interview each family carefully, 
+                    and using a visual catalog, we sit down together to create a list that is suited to their 
+                    individual needs. From here, we work with other partners in the community to provide furniture 
+                    and large items that are more difficult to ship and deliver, and we check in to see how each 
+                    family’s needs are being fulfilled. We provide clothing, first aid kits, dictionaries, laptops, 
+                    phones, bedding and linens, cookware, basic household items and more through these lists. 
+                    Check out our Amazon lists HERE:
+                    <a href="https://www.amazon.com/gp/registry/wishlist/1C7TMCZMRNLA/ref=nav_wishlist_lists_5">
+                        Amazon WishList
+                    </a>
+                    (we should talk about the best way to link to Amazon page with ALL the lists on it)
+                </p>
+            </div>
+        <div class="col-md-4">
+            <p style="color:gray;">COMMUNITY DONATIONS</p>
+            <hr/>
+            <p style="text-align:justify; font-size:13px;">We gladly accept contributions from the community, and we frequently facilitate donation drives 
+            for our families. Next to furniture, the most common request is for household cleaning supplies, 
+            and many times a year we collect boxes of supplies from different organizations – churches, temples,
+            schools – who have hosted a drive for our families. We have also had kids’ clothing drives, backpack & 
+            school supply drives, and baby supplies drives which have all brought great joy to our families. If you
+            have items to donate, 
+            click HERE (this should take us to the DONATE ITEMS page)</p>
+        </div>
+            <div class="col-md-4">
+                <p style="color:gray;">SCHOLARSHIP</p>
+                <hr/>
+                <p style="text-align:justify; font-size:13px;">
+                    We provide our families’ children with scholarships for enrichment programs on an as-needed basis.
+                    Whether it’s sponsoring a young swimmer to train year round with the swim team, or sending kids
+                    to summer camp, our goal is to give these children a chance to be good at something. The self-esteem 
+                    and confidence that comes from mastering a new sport or hobby lasts a long time and can change a kid’s
+                    life. Our fundraising for scholarship programs is year-round, as are the programs we sponsor. 
+                    To donate to our scholarship fund, click HERE (this should take us to the DONATE MONEY page)
+                </p>
+        </div>
+     </div>
+
+    </div>
+<hr/>
+<div class="container">
+    <div class="row">
+        <img src="~/images/CajonMap.png" alt="locateus" style="" class="img-responsive" />
+    </div>
+</div>

@@ -1,0 +1,82 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row" style="padding:20px;">
+    <h4 style="margin-top:30px;">My Donations</h4>
+    <hr/>
+
+    <div>
+        <table id="t01" >
+            <tr>
+            <th>Donation Type</th>
+            <th>Amount</th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Allocation</th>
+            </tr>
+            @foreach (var item in ViewBag.MyDonations)
+            {
+
+                <tr>
+                    <td>
+                        @item.DonationType
+                    </td>
+                    <td>
+                        @item.Amount
+                    </td>
+                    <td>
+                        @item.Item
+                    </td>
+                    <td>
+                        @item.Quantity
+                    </td>
+                    <td>
+                        @item.Allocation
+                    </td>
+                </tr>
+
+            }
+
+        </table>
+    </div>  
+</div>
+
+<style>
+    table#t01 {
+        width: 100%;
+        background-color: #f1f1c1;
+    }
+
+        table#t01 tr:nth-child(even) {
+            background-color: #eee;
+        }
+
+        table#t01 tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        table#t01 th {
+            color: white;
+            background-color: rgb(70,130,180);
+        }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 15px;
+    }
+</style> 
