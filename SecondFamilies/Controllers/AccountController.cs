@@ -44,6 +44,7 @@ namespace SecondFamilies.Controllers
             ApplicationDbContext _ctx,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
+            IMessaging messaging,
             ILogger<AccountController> logger,
             IHostingEnvironment env
             )
@@ -53,6 +54,7 @@ namespace SecondFamilies.Controllers
             _emailSender = emailSender;
             _logger = logger;
             ctx = _ctx;
+            _messenger = messaging;
             this.hostingEnv = env;
         }
 
@@ -491,54 +493,6 @@ namespace SecondFamilies.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Donate(DonateViewModel model, string returnUrl = null)
         {
-            /*
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    var donateData = new Donate
-                    {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Address = model.Address,
-                        PhoneNumber = model.PhoneNumber,
-                        Email = model.Email,
-                        Amount = model.Amount,
-                        Allocation = model.Allocation,
-                        Item = model.Item,
-                        Quantity = model.Quantity,
-                        ImageUrl = model.ImageFile,
-                        NeedPickup = model.NeedPickup,
-                        CanDropOff = model.CanDropOff,
-                        DatePickDrop = model.DatePickDrop,
-                        DonationType = model.DonationType,
-                        DonationStatus = "pending",
-                        UserId = user.Id
-                    };
-                    ctx.Donate.Add(donateData);
-                    ctx.SaveChanges();
-
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
-                }
-                AddErrors(result);
-                
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-            */
-
             ViewData["ReturnUrl"] = returnUrl;
 
             if (_signInManager.IsSignedIn(User))
@@ -553,7 +507,7 @@ namespace SecondFamilies.Controllers
                         LastName = model.LastName,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
-                        Email = model.Email,
+                        Email = model.Email == null ? userdata[0].Email : string.Empty,
                         Amount = model.Amount,
                         Allocation = model.Allocation,
                         Item = model.Item,
@@ -580,13 +534,14 @@ namespace SecondFamilies.Controllers
                     string _PayPalURL = $"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business={_MerchantEmail}&return={_ReturnURL}&cancel_return={_CancelURL}&currency_code={_CurrencyCode}&amount={_Amount}&item_name={_ItemName}&discount_amount={_Discount}&tax={_Tax}";
 
                     Response.Redirect(_PayPalURL);
+
+                    await _messenger.SendDonationEmail(donateData, false);
                     //return RedirectToLocal(returnUrl);
                     //return RedirectToAction("SuccessfullDonation", "Account", new { area = "" });
                 }
             }
             else
             {
-
                 if (ModelState.IsValid)
                 {
                     var user = new ApplicationUser
@@ -607,7 +562,7 @@ namespace SecondFamilies.Controllers
                             LastName = model.LastName,
                             Address = model.Address,
                             PhoneNumber = model.PhoneNumber,
-                            Email = model.Email,
+                            Email = model.Email == null ? user.Email : string.Empty,
                             Amount = model.Amount,
                             Allocation = model.Allocation,
                             Item = model.Item,
@@ -646,6 +601,7 @@ namespace SecondFamilies.Controllers
 
                         Response.Redirect(_PayPalURL);
 
+                        await _messenger.SendDonationEmail(donateData, false);
                     }
                     AddErrors(result);
                 }
@@ -711,7 +667,7 @@ namespace SecondFamilies.Controllers
                         LastName = model.LastName,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
-                        Email = model.Email,
+                        Email = model.Email == null ? userdata[0].Email : string.Empty,
                         Amount = model.Amount,
                         Allocation = model.Allocation,
                         Item = model.Item,
@@ -726,74 +682,8 @@ namespace SecondFamilies.Controllers
                     };
                     ctx.Donate.Add(donateData);
                     ctx.SaveChanges();
-                    try
-                    {
-                        //From Address  
-                        string FromAddress = "foodc10@gmail.com";
-                        string FromAdressTitle = "Email from Second Family";
-                        //To Address  
-                        string ToAddress = donateData.Email;
-                        string ToAdressTitle = "Second Family";
-                        string Subject = "Donate Goods & Items.";
-                        string BodyContent = "";
-                        BodyContent += @"Hey " + donateData.FirstName + " " + donateData.LastName + ".";
-                        BodyContent += "Thanks for your Donation of Goods & Items.<br /><br />";
-                        BodyContent += "Item - " + donateData.Item + ".<br />";
-                        BodyContent += "Quantity - " + donateData.Quantity + ".<br />";
-                        BodyContent += "Location - " + donateData.Address + ".<br />";
-                        BodyContent += "Do you need a pickup? - " + donateData.NeedPickup + "<br />.";
-                        BodyContent += "Can you drop off? - " + donateData.CanDropOff + ".<br />";
-                        BodyContent += "Available date/time for pickup/drop off :- " + donateData.DatePickDrop + ".<br /><br /><br />";
-                        BodyContent += "Thank You";
-
-
-
-                        //Smtp Server  
-                        string SmtpServer = "smtp.gmail.com";
-                        //Smtp Port Number  
-                        int SmtpPortNumber = 587;
-
-                        var mimeMessage = new MimeMessage();
-                        mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
-                        mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
-                        mimeMessage.Cc.Add(new MailboxAddress("Haidari Hammad", "haidarihammad@gmail.com"));
-                        mimeMessage.Bcc.Add(new MailboxAddress("Haidari Hammad", "haidarihammad@gmail.com"));
-
-                        mimeMessage.Subject = Subject;
-
-                        var builder = new BodyBuilder();
-                        builder.HtmlBody = BodyContent;
-
-                        foreach (string file in Directory.EnumerateFiles(
-                        hostingEnv.WebRootPath + "\\dimage\\",
-                        "*",
-                        SearchOption.AllDirectories)
-                        )
-                        {
-                            builder.Attachments.Add(file);
-                        }
-                        mimeMessage.Body = builder.ToMessageBody();
-
-                        using (var client = new MailKit.Net.Smtp.SmtpClient())
-                        {
-
-                            client.Connect(SmtpServer, SmtpPortNumber, false);
-                            // Note: only needed if the SMTP server requires authentication  
-                            // Error 5.5.1 Authentication   
-                            client.Authenticate("foodc10@gmail.com", "foodc@619619");
-                            client.Send(mimeMessage);
-
-                            client.Disconnect(true);
-
-                        }
-                        return RedirectToAction("SuccessfullDonation", "Account", new { area = "" });
-
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-
+                    await _messenger.SendDonationEmail(donateData, true);
+                    return RedirectToAction("SuccessfullDonation");
                 }
             }
             else
@@ -840,75 +730,7 @@ namespace SecondFamilies.Controllers
                         var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                         await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        try
-                        {
-                            //From Address  
-                            string FromAddress = "foodc10@gmail.com";
-                            string FromAdressTitle = "Email from Second Family";
-                            //To Address  
-                            string ToAddress = donateData.Email;
-                            string ToAdressTitle = "Second Family";
-                            string Subject = "Donate Goods & Items";
-                            string BodyContent = "";
-                            BodyContent += @"Hey " + donateData.FirstName + " " + donateData.LastName + ".";
-                            BodyContent += "Thanks for your Donation of Goods & Items.<br /><br />";
-                            BodyContent += "Item - " + donateData.Item + ".<br />";
-                            BodyContent += "Quantity - " + donateData.Quantity + ".<br />";
-                            BodyContent += "Location - " + donateData.Address + ".<br />";
-                            BodyContent += "Do you need a pickup? - " + donateData.NeedPickup + ".<br />";
-                            BodyContent += "Can you drop off? - " + donateData.CanDropOff + ".<br />";
-                            BodyContent += "Available date/time for pickup/drop off :- " + donateData.DatePickDrop + ".<br /><br /><br />";
-                            BodyContent += "Thank You";
-
-                            //Smtp Server  
-                            string SmtpServer = "smtp.gmail.com";
-                            //Smtp Port Number  
-                            int SmtpPortNumber = 587;
-
-                            var mimeMessage = new MimeMessage();
-                            mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
-                            mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
-                            mimeMessage.Cc.Add(new MailboxAddress("Haidari Hammad", "haidarihammad@gmail.com"));
-                            mimeMessage.Bcc.Add(new MailboxAddress("Haidari Hammad", "haidarihammad@gmail.com"));
-
-                            mimeMessage.Subject = Subject;
-
-                            var builder = new BodyBuilder();
-                            builder.HtmlBody = BodyContent;
-
-                            foreach (string file in Directory.EnumerateFiles(
-                            hostingEnv.WebRootPath + "\\dimage\\",
-                            "*",
-                            SearchOption.AllDirectories)
-                            )
-                            {
-                                builder.Attachments.Add(file);
-                            }
-
-                            mimeMessage.Body = builder.ToMessageBody();
-
-                            using (var client = new MailKit.Net.Smtp.SmtpClient())
-                            {
-
-                                client.Connect(SmtpServer, SmtpPortNumber, false);
-                               // Note: only needed if the SMTP server requires authentication
-                                 //sError 5.5.1 Authentication
-                                client.Authenticate("foodc10@gmail.com", "foodc@619619");
-                                client.Send(mimeMessage);
-
-                                client.Disconnect(true);
-
-                            }
-                            return RedirectToAction("SuccessfullDonation", "Account", new { area = "" });
-
-                        }
-                        catch (Exception ex)
-                        {
-                            throw ex;
-                        }
-
-
-                        //return RedirectToLocal(returnUrl);
+                        await _messenger.SendDonationEmail(donateData, true);
                     }
                     AddErrors(result);
                 }

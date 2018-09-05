@@ -13,7 +13,7 @@ namespace SecondFamilies.Services
 {
     public interface IMessaging
     {
-        Task SendDonationEmail(Donate donate);
+        Task SendDonationEmail(Donate donate,bool isForGoodsItem);
     }
     public class Messaging : IMessaging
     {
@@ -24,7 +24,7 @@ namespace SecondFamilies.Services
             env = hostingEnvironment;
         }
 
-        public async Task SendDonationEmail(Donate donateData)
+        public async Task SendDonationEmail(Donate donateData,bool isForGoodsItem)
         {
             try
             {
@@ -34,18 +34,27 @@ namespace SecondFamilies.Services
                 //To Address  
                 string ToAddress = donateData.Email;
                 string ToAdressTitle = "Second Family";
-                string Subject = "Donate Goods & Items";
+                string Subject = "";
                 string BodyContent = "";
-                BodyContent += @"Hey " + donateData.FirstName + " " + donateData.LastName + ".";
-                BodyContent += "Thanks for your Donation of Goods & Items.<br /><br />";
-                BodyContent += "Item - " + donateData.Item + ".<br />";
-                BodyContent += "Quantity - " + donateData.Quantity + ".<br />";
-                BodyContent += "Location - " + donateData.Address + ".<br />";
-                BodyContent += "Do you need a pickup? - " + donateData.NeedPickup + ".<br />";
-                BodyContent += "Can you drop off? - " + donateData.CanDropOff + ".<br />";
-                BodyContent += "Available date/time for pickup/drop off :- " + donateData.DatePickDrop + ".<br /><br /><br />";
-                BodyContent += "Thank You";
-
+                if (isForGoodsItem)
+                {
+                    BodyContent += @"Hey " + donateData.FirstName + " " + donateData.LastName + ".";
+                    BodyContent += "Thanks for your Donation of Goods & Items.<br /><br />";
+                    BodyContent += "Item - " + donateData.Item + ".<br />";
+                    BodyContent += "Quantity - " + donateData.Quantity + ".<br />";
+                    BodyContent += "Location - " + donateData.Address + ".<br />";
+                    BodyContent += "Do you need a pickup? - " + donateData.NeedPickup + ".<br />";
+                    BodyContent += "Can you drop off? - " + donateData.CanDropOff + ".<br />";
+                    BodyContent += "Available date/time for pickup/drop off :- " + donateData.DatePickDrop + ".<br /><br /><br />";
+                    BodyContent += "Thank You";
+                    Subject = "Donate Goods & Items";
+                }
+                else
+                {
+                    BodyContent += @"Dear " + donateData.FirstName + " " + donateData.LastName + ".";
+                    BodyContent += "Thanks for your Donation to Second Families<br /><br />";
+                    Subject = "Donation";
+                }
                 //Smtp Server  
                 string SmtpServer = "smtp.gmail.com";
                 //Smtp Port Number  
@@ -54,6 +63,8 @@ namespace SecondFamilies.Services
                 var mimeMessage = new MimeMessage();
                 mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
                 mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
+                mimeMessage.Cc.Add(new MailboxAddress("Haidari Hammad", "haidarihammad@gmail.com"));
+                mimeMessage.Bcc.Add(new MailboxAddress("Haidari Hammad", "haidarihammad@gmail.com"));
                 mimeMessage.Subject = Subject;
 
                 var builder = new BodyBuilder();
