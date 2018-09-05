@@ -52,7 +52,7 @@ namespace SecondFamilies.Services
                 else
                 {
                     BodyContent += @"Dear " + donateData.FirstName + " " + donateData.LastName + ".";
-                    BodyContent += "Thanks for your Donation to Second Families<br /><br />";
+                    BodyContent += "Your Donation Was Successfull !Thank you for Your Support to Second families!<br /><br />";
                     Subject = "Donation";
                 }
                 //Smtp Server  

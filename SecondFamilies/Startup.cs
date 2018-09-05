@@ -39,6 +39,10 @@ namespace SecondFamilies
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IMessaging, Messaging>();
 
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
+            });
+
             services.AddMvc();
 
             services.Configure<IdentityOptions>(options =>
@@ -67,6 +71,8 @@ namespace SecondFamilies
             }
 
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseAuthentication();
 

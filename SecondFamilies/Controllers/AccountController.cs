@@ -37,6 +37,8 @@ namespace SecondFamilies.Controllers
 
 
         ApplicationDbContext ctx;
+        const string DonateSession = "DonateSession";
+
         private IHostingEnvironment hostingEnv;
 
         public AccountController(
@@ -495,6 +497,13 @@ namespace SecondFamilies.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
+            System.IO.DirectoryInfo di = new DirectoryInfo(hostingEnv.WebRootPath + "\\dimage\\");
+
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+
             if (_signInManager.IsSignedIn(User))
             {
                 var useremail = User.Identity.Name;
@@ -522,6 +531,9 @@ namespace SecondFamilies.Controllers
                     };
                     ctx.Donate.Add(donateData);
                     ctx.SaveChanges();
+                    HttpContext.Session.SetString(DonateSession, donateData.Email);
+                    HttpContext.Session.SetString("FirstName", donateData.FirstName);
+                    HttpContext.Session.SetString("LastName", donateData.LastName);
 
                     string _MerchantEmail = "manishkr38@gmail.com";
                     string _ReturnURL = "https://localhost:44396/Account/SuccessfullDonation";
@@ -535,7 +547,6 @@ namespace SecondFamilies.Controllers
 
                     Response.Redirect(_PayPalURL);
 
-                    await _messenger.SendDonationEmail(donateData, false);
                     //return RedirectToLocal(returnUrl);
                     //return RedirectToAction("SuccessfullDonation", "Account", new { area = "" });
                 }
@@ -588,7 +599,9 @@ namespace SecondFamilies.Controllers
                         _logger.LogInformation("User created a new account with password.");
                         //return RedirectToLocal(returnUrl);
                         //return RedirectToAction("SuccessfullDonation", "Account", new { area = "" });
-
+                        HttpContext.Session.SetString(DonateSession, donateData.Email);
+                        HttpContext.Session.SetString("FirstName", donateData.FirstName);
+                        HttpContext.Session.SetString("LastName", donateData.LastName);
                         string _MerchantEmail = "manishkr38@gmail.com";
                         string _ReturnURL = "https://localhost:44396/Account/SuccessfullDonation";
                         string _CancelURL = "https://localhost:44396/";
@@ -601,7 +614,6 @@ namespace SecondFamilies.Controllers
 
                         Response.Redirect(_PayPalURL);
 
-                        await _messenger.SendDonationEmail(donateData, false);
                     }
                     AddErrors(result);
                 }
@@ -742,9 +754,22 @@ namespace SecondFamilies.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult SuccessfullDonation(string returnUrl = null)
+        public async Task<IActionResult> SuccessfullDonation(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            var returnUrlString = HttpContext.Session.GetString(DonateSession);
+            var FirstName = HttpContext.Session.GetString("FirstName");
+            var LastName = HttpContext.Session.GetString("LastName");
+            if (returnUrlString != null)
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(hostingEnv.WebRootPath + "\\dimage\\");
+
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                await _messenger.SendDonationEmail(new Donate { Email = returnUrlString, FirstName = FirstName, LastName = LastName }, false);
+            }
             return View();
         }
 
