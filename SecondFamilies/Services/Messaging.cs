@@ -43,6 +43,10 @@ namespace SecondFamilies.Services
                     BodyContent += "Item - " + donateData.Item + ".<br />";
                     BodyContent += "Quantity - " + donateData.Quantity + ".<br />";
                     BodyContent += "Location - " + donateData.Address + ".<br />";
+                    if (!string.IsNullOrEmpty(donateData.PhoneNumber))
+                    {
+                        BodyContent += "PhoneNumber - " + donateData.PhoneNumber + ".<br />";
+                    }
                     BodyContent += "Do you need a pickup? - " + donateData.NeedPickup + ".<br />";
                     BodyContent += "Can you drop off? - " + donateData.CanDropOff + ".<br />";
                     BodyContent += "Available date/time for pickup/drop off :- " + donateData.DatePickDrop + ".<br /><br /><br />";

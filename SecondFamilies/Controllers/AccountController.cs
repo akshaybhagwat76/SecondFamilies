@@ -743,6 +743,7 @@ namespace SecondFamilies.Controllers
                         await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         await _messenger.SendDonationEmail(donateData, true);
+                        return RedirectToAction("SuccessfullDonation");
                     }
                     AddErrors(result);
                 }
