@@ -1,0 +1,51 @@
+﻿.btn-space {
+    margin-right: 5px;
+}
+
+.btn-primary-spacing {
+    margin-right: 5px;
+    margin-bottom: 5px !important;
+}
+
+.blocks {
+    border-spacing: 10px;
+}
+
+.example1 {
+    border: 2px solid cornflowerblue;
+    border-radius: 0px 0px;
+}
+
+div.absolute {
+    position: absolute;
+    bottom: 10px;
+    width: 50%;
+    border: 3px solid #8AC007;
+}
+
+#pos {
+    position: absolute;
+    top: 150px;
+}
+
+.btn-group {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+    .btn-group > a {
+        margin-right: 5px;
+        margin-bottom: 5px;
+        width: 75px;
+        border-radius: 20px !important;
+    }
+
+@media ( max-width:767px ) {
+    .nav-tabs > li {
+        width: 100%;
+    }
+
+        .nav-tabs > li.active {
+            border-bottom: 1px solid grey;
+        }
+}
